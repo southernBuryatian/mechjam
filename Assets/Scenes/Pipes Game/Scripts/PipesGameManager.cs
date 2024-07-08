@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Windows;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System;
 
 public class PipesGameManager : MonoBehaviour, IRotationListener
 {
@@ -14,6 +15,8 @@ public class PipesGameManager : MonoBehaviour, IRotationListener
     public GameObject TurningPipe;
 
     private GameObject[] Pipes;
+    private int startingCoordinate;
+    private int endingCoordinatedinate;
     private List<string> challenges = new List<string>
     {
         "0211213232231113132223241",
@@ -38,14 +41,29 @@ public class PipesGameManager : MonoBehaviour, IRotationListener
         {
             int y = (4 - i/5);
             int x = i - (i/5)*5;
-            Pipes[i] = currentChallenge[i] switch
+            switch (currentChallenge[i])
             {
-                '0' => Instantiate(StartingNode, new Vector2((float)x, (float)y), Quaternion.identity),
-                '1' => Instantiate(StraightPipe, new Vector2((float)x, (float)y), Quaternion.identity),
-                '2' => Instantiate(TurningPipe, new Vector2((float)x, (float)y), Quaternion.identity),
-                '3' => Instantiate(TPipe, new Vector2((float)x, (float)y), Quaternion.identity),
-                _ => Instantiate(EndingNode, new Vector2((float)x, (float)y), Quaternion.identity)
-            };
+                case '0':
+                    Pipes[i] = Instantiate(StartingNode, new Vector2((float)x, (float)y), Quaternion.identity);
+                    startingCoordinate = i;
+                    break;
+                case '1':
+                    Pipes[i] = Instantiate(StraightPipe, new Vector2((float)x, (float)y), Quaternion.identity);
+                    Pipes[i].GetComponent<PipeScript>().SetActiveSides(new int[] { 1, 3 }); 
+                    break;
+                case '2':
+                    Pipes[i] = Instantiate(TurningPipe, new Vector2((float)x, (float)y), Quaternion.identity);
+                    Pipes[i].GetComponent<PipeScript>().SetActiveSides(new int[] { 1, 2 });
+                    break;
+                case '3':
+                    Pipes[i] = Instantiate(TPipe, new Vector2((float)x, (float)y), Quaternion.identity);
+                    Pipes[i].GetComponent<PipeScript>().SetActiveSides(new int[] { 1, 2, 3 });
+                    break;
+                default:
+                    Pipes[i] = Instantiate(EndingNode, new Vector2((float)x, (float)y), Quaternion.identity);
+                    endingCoordinatedinate = i;
+                    break;
+            }
             IRotatable maybyRotatable = Pipes[i].GetComponent<IRotatable>();
             if (maybyRotatable != null)
             {
@@ -53,15 +71,20 @@ public class PipesGameManager : MonoBehaviour, IRotationListener
                 maybyRotatable.SetPosition(i);
             }
         }
+        CheckIsComplete();
     }
 
     void IRotationListener.OnRotationChanged(int position)
     {
-        Debug.Log($"Tile {position} rotated.");
-        IRotatable maybyRotatable = Pipes[position].GetComponent<IRotatable>();
-        if (maybyRotatable != null)
+        if (CheckIsComplete())
         {
-            Debug.Log($"New rotation {maybyRotatable.GetRotation()}.");
+            Debug.Log($"Game is finished successfully.");
         }
+        IRotatable maybyRotatable = Pipes[position].GetComponent<IRotatable>();
+    }
+
+    private bool CheckIsComplete()
+    {
+        throw new NotImplementedException();
     }
 }

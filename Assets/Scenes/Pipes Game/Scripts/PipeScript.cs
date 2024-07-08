@@ -7,6 +7,12 @@ public class PipeScript : MonoBehaviour, IRotatable
     private IRotationListener gameManager;
     private int gridPosition = -1;
     private bool isConnectedToStartNode;
+    private int[] activeSides;
+
+    public void SetActiveSides(int[] activeSides)
+    {
+        this.activeSides = activeSides;
+    }
 
     void SetGameManage(PipesGameManager gameManager)
     {
