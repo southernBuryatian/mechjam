@@ -2,18 +2,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PipeScript : MonoBehaviour
+public class PipeScript : MonoBehaviour, IRotatable
 {
+    private IRotationListener gameManager;
+    private int gridPosition = -1;
     private bool isConnectedToStartNode;
-    float[] rotations = { 0, 90, 180, 270 };
-    // Start is called before the first frame update
-    void Start()
+
+    void SetGameManage(PipesGameManager gameManager)
     {
-        int rand = Random.Range(0, rotations.Length);
-        gameObject.transform.Rotate(0, 0, 90, Space.Self);
+        this.gameManager = gameManager;
     }
 
-    // Update is called once per frame
+    void SetGridPosition(int position)
+    {
+        gridPosition = position;
+    }
+
+    void Start()
+    {
+        int rand = Random.Range(0, 3);
+        gameObject.transform.Rotate(0, 0, rand*90, Space.Self);
+    }
+
     void Update()
     {
 
@@ -24,8 +34,27 @@ public class PipeScript : MonoBehaviour
         turn();
     }
 
-    public virtual void turn()
+    public void turn()
     {
         gameObject.transform.Rotate(0, 0, 90, Space.Self);
+        if (gameManager != null)
+        {
+            gameManager.OnRotationChanged(gridPosition);
+        }
+    }
+
+    public void SetPosition(int position)
+    {
+        gridPosition = position;
+    }
+
+    public int GetRotation()
+    {
+        return (int) gameObject.transform.eulerAngles.z/1;
+    }
+
+    public void SetRotationListener(IRotationListener listener)
+    {
+        gameManager = listener;
     }
 }

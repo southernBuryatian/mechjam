@@ -5,7 +5,7 @@ using UnityEngine.Windows;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-public class PipesGameManager : MonoBehaviour
+public class PipesGameManager : MonoBehaviour, IRotationListener
 {
     public GameObject StartingNode;
     public GameObject EndingNode;
@@ -31,7 +31,7 @@ public class PipesGameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        int randomNumber = Random.Range(0, 8);
+        int randomNumber = UnityEngine.Random.Range(0, 8);
         string currentChallenge = challenges[randomNumber];
         Pipes = new GameObject[currentChallenge.Length];
         for (int i = 0; i < currentChallenge.Length; i++)
@@ -46,12 +46,22 @@ public class PipesGameManager : MonoBehaviour
                 '3' => Instantiate(TPipe, new Vector2((float)x, (float)y), Quaternion.identity),
                 _ => Instantiate(EndingNode, new Vector2((float)x, (float)y), Quaternion.identity)
             };
+            IRotatable maybyRotatable = Pipes[i].GetComponent<IRotatable>();
+            if (maybyRotatable != null)
+            {
+                maybyRotatable.SetRotationListener(this);
+                maybyRotatable.SetPosition(i);
+            }
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    void IRotationListener.OnRotationChanged(int position)
     {
-        
+        Debug.Log($"Tile {position} rotated.");
+        IRotatable maybyRotatable = Pipes[position].GetComponent<IRotatable>();
+        if (maybyRotatable != null)
+        {
+            Debug.Log($"New rotation {maybyRotatable.GetRotation()}.");
+        }
     }
 }
