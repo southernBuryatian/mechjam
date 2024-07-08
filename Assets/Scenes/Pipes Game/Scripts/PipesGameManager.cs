@@ -16,32 +16,34 @@ public class PipesGameManager : MonoBehaviour
     private GameObject[] Pipes;
     private List<string> challenges = new List<string>
     {
-        "0 2 1 1 2 1 3 2 3 2 2 3 1 1 1 3 1 3 2 2 2 3 2 4 1",
-        "2 0 1 1 2 2 3 1 3 2 1 3 3 2 1 2 1 3 1 2 4 1 1 1 3",
-        "2 1 1 1 0 2 2 3 2 1 1 3 1 3 2 2 3 3 1 2 4 1 1 1 3",
-        "2 0 1 1 2 1 3 3 1 3 3 2 1 2 1 1 3 3 1 2 4 1 1 1 3",
-        "0 1 1 1 2 2 3 3 2 1 1 3 1 3 2 2 3 1 3 2 4 1 1 1 3"
+        "0211213232231113132223241",
+        "2011223132133212131241113",
+        "2111022321131322331241113",
+        "2011213313321211331241113",
+        "0111223321131322313241113",
+        "0112222132311312211131411",
+        "0211223313231212331121141",
+        "0112223132311312131141131",
+        "0112222132311312211141131"
     };
     
 
     // Start is called before the first frame update
     void Start()
     {
-        int randomNumber = Random.Range(0, 5);
-        int[] numbers = challenges[randomNumber].Split(' ')
-                         .Select(int.Parse)
-                         .ToArray();
-        Pipes = new GameObject[numbers.Length];
-        for (int i = 0; i < numbers.Length; i++)
+        int randomNumber = Random.Range(0, 8);
+        string currentChallenge = challenges[randomNumber];
+        Pipes = new GameObject[currentChallenge.Length];
+        for (int i = 0; i < currentChallenge.Length; i++)
         {
             int y = (4 - i/5);
             int x = i - (i/5)*5;
-            Pipes[i] = numbers[i] switch
+            Pipes[i] = currentChallenge[i] switch
             {
-                0 => Instantiate(StartingNode, new Vector2((float)x, (float)y), Quaternion.identity),
-                1 => Instantiate(StraightPipe, new Vector2((float)x, (float)y), Quaternion.identity),
-                2 => Instantiate(TurningPipe, new Vector2((float)x, (float)y), Quaternion.identity),
-                3 => Instantiate(TPipe, new Vector2((float)x, (float)y), Quaternion.identity),
+                '0' => Instantiate(StartingNode, new Vector2((float)x, (float)y), Quaternion.identity),
+                '1' => Instantiate(StraightPipe, new Vector2((float)x, (float)y), Quaternion.identity),
+                '2' => Instantiate(TurningPipe, new Vector2((float)x, (float)y), Quaternion.identity),
+                '3' => Instantiate(TPipe, new Vector2((float)x, (float)y), Quaternion.identity),
                 _ => Instantiate(EndingNode, new Vector2((float)x, (float)y), Quaternion.identity)
             };
         }
