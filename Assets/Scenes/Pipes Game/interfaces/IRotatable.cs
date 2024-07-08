@@ -6,6 +6,5 @@ using UnityEngine;
 public interface IRotatable
 {
     void SetPosition(int position);
-    int GetRotation();
     void SetRotationListener(IRotationListener listener);
 }

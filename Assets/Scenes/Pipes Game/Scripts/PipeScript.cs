@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -54,7 +53,7 @@ public class PipeScript : MonoBehaviour, IRotatable
         gridPosition = position;
     }
 
-    public int GetRotation()
+    private int GetRotation()
     {
         return (int) gameObject.transform.eulerAngles.z/1;
     }
@@ -62,5 +61,16 @@ public class PipeScript : MonoBehaviour, IRotatable
     public void SetRotationListener(IRotationListener listener)
     {
         gameManager = listener;
+    }
+
+    public HashSet<int> GetActiveAnglesForCurrectRotation()
+    {
+        HashSet<int> result = new HashSet<int>();
+        int currentRotation = GetRotation();
+        for (int i = 0; i < activeSides.Length; i++)
+        {
+            result.Add((activeSides[i] + currentRotation/90) % 4);
+        }
+        return result;
     }
 }

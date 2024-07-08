@@ -1,10 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Windows;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System;
 
 public class PipesGameManager : MonoBehaviour, IRotationListener
 {
@@ -17,6 +12,10 @@ public class PipesGameManager : MonoBehaviour, IRotationListener
     private GameObject[] Pipes;
     private int startingCoordinate;
     private int endingCoordinatedinate;
+
+    private Queue<int> pipeIdToProccess;
+    private HashSet<int> activePipeIds;
+
     private List<string> challenges = new List<string>
     {
         "0211213232231113132223241",
@@ -85,6 +84,56 @@ public class PipesGameManager : MonoBehaviour, IRotationListener
 
     private bool CheckIsComplete()
     {
-        throw new NotImplementedException();
+        pipeIdToProccess = new Queue<int>();
+        activePipeIds = new HashSet<int>();
+        activePipeIds.Add(startingCoordinate);
+        pipeIdToProccess.Enqueue(startingCoordinate);
+        return ProccessPipeId();
+    }
+
+    private bool ProccessPipeId()
+    {   
+        if (pipeIdToProccess.Count > 0)
+        {
+            int idToProcess = pipeIdToProccess.Dequeue();
+            if (idToProcess == endingCoordinatedinate) return true;
+            HashSet<int> sidesToCheck = GetActiveSidesForId(idToProcess);
+            return ProccessPipeId();
+        } else return false;
+    }
+
+    private HashSet<int> GetActiveSidesForId(int idToProcess)
+    {
+        if (idToProcess == startingCoordinate)
+        {
+            return idToProcess switch
+            {
+                0 => new HashSet<int> { 1, 2 },
+                4 => new HashSet<int> { 2, 3 },
+                _ => new HashSet<int> { 1, 2, 3 }
+            };
+        } else
+        {
+            int y = (4 - idToProcess / 5);
+            int x = idToProcess - (idToProcess / 5) * 5;
+            HashSet<int> result = Pipes[idToProcess].GetComponent<PipeScript>().GetActiveAnglesForCurrectRotation();
+            if (y == 4)
+            {
+                result.Remove(0);
+            }
+            if (y == 0)
+            {
+                result.Remove(2);
+            }
+            if (x == 0)
+            {
+                result.Remove(3);
+            }
+            if (x == 4)
+            {
+                result.Remove(1);
+            }
+            return result;
+        }
     }
 }
