@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5614809423670100481}
   - component: {fileID: 3338541759834336983}
   m_Layer: 0
-  m_Name: Turn_Pipe
+  m_Name: TurnPipe
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

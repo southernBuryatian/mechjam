@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class PipeScript : MonoBehaviour, IRotatable
@@ -39,7 +40,7 @@ public class PipeScript : MonoBehaviour, IRotatable
         turn();
     }
 
-    public void turn()
+    private void turn()
     {
         gameObject.transform.Rotate(0, 0, 90, Space.Self);
         if (gameManager != null)
@@ -63,14 +64,33 @@ public class PipeScript : MonoBehaviour, IRotatable
         gameManager = listener;
     }
 
-    public HashSet<int> GetActiveAnglesForCurrectRotation()
+    internal List<int> GetActiveAnglesForCurrectRotation()
     {
-        HashSet<int> result = new HashSet<int>();
+        List<int> result = new List<int>();
         int currentRotation = GetRotation();
+        Debug.Log($"Pipe currentRotation {currentRotation}.");
+        int correctedRitation = currentRotation switch
+        {
+            0 => currentRotation,
+            _ => 360 - currentRotation
+        };
         for (int i = 0; i < activeSides.Length; i++)
         {
-            result.Add((activeSides[i] + currentRotation/90) % 4);
+            int correctedSide = (activeSides[i] + correctedRitation / 90) % 4;
+            Debug.Log($"Pipe correctedSide {correctedSide}.");
+            result.Add(correctedSide);
         }
         return result;
+    }
+
+    internal bool IsConnectedToSide(int sideCode)
+    {
+        return sideCode switch
+        {
+            0 => GetActiveAnglesForCurrectRotation().Contains(2),
+            1 => GetActiveAnglesForCurrectRotation().Contains(3),
+            2 => GetActiveAnglesForCurrectRotation().Contains(0),
+            _ => GetActiveAnglesForCurrectRotation().Contains(1)
+        };
     }
 }

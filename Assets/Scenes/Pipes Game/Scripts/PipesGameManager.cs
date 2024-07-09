@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,8 +14,8 @@ public class PipesGameManager : MonoBehaviour, IRotationListener
     private int startingCoordinate;
     private int endingCoordinatedinate;
 
-    private Queue<int> pipeIdToProccess;
-    private HashSet<int> activePipeIds;
+    private Queue<int> pipeIdToProccess = new Queue<int>();
+    private HashSet<int> activePipeIds = new HashSet<int>();
 
     private List<string> challenges = new List<string>
     {
@@ -70,7 +71,11 @@ public class PipesGameManager : MonoBehaviour, IRotationListener
                 maybyRotatable.SetPosition(i);
             }
         }
-        CheckIsComplete();
+        if (CheckIsComplete())
+        {
+            ClearData();
+            Start();
+        }
     }
 
     void IRotationListener.OnRotationChanged(int position)
@@ -78,12 +83,14 @@ public class PipesGameManager : MonoBehaviour, IRotationListener
         if (CheckIsComplete())
         {
             Debug.Log($"Game is finished successfully.");
+            ClearData();
         }
-        IRotatable maybyRotatable = Pipes[position].GetComponent<IRotatable>();
     }
 
     private bool CheckIsComplete()
     {
+        pipeIdToProccess.Clear();
+        activePipeIds.Clear();  
         pipeIdToProccess = new Queue<int>();
         activePipeIds = new HashSet<int>();
         activePipeIds.Add(startingCoordinate);
@@ -96,27 +103,52 @@ public class PipesGameManager : MonoBehaviour, IRotationListener
         if (pipeIdToProccess.Count > 0)
         {
             int idToProcess = pipeIdToProccess.Dequeue();
-            if (idToProcess == endingCoordinatedinate) return true;
-            HashSet<int> sidesToCheck = GetActiveSidesForId(idToProcess);
+            Debug.Log($"pipeIdToProccess.Dequeue {idToProcess}.");
+            List<int> sidesToCheck = GetActiveSidesForId(idToProcess);
+            for (int i = 0; i < sidesToCheck.Count; i++)
+            {
+                Debug.Log($"sideToCheck {sidesToCheck[i]} for {idToProcess}.");
+                int coordinateToCheckConnection = sidesToCheck[i] switch
+                {
+                    0 => idToProcess - 5,
+                    1 => idToProcess + 1,
+                    2 => idToProcess + 5,
+                    _ => idToProcess - 1
+                };
+                if (coordinateToCheckConnection == endingCoordinatedinate)
+                {
+                    return true;
+                }
+                Debug.Log($"ÑoordinateToCheckConnection {coordinateToCheckConnection}.");
+                if (!activePipeIds.Contains(coordinateToCheckConnection))
+                {
+                    if (Pipes[coordinateToCheckConnection].GetComponent<PipeScript>().IsConnectedToSide(sidesToCheck[i]))
+                    {
+                        Debug.Log($"ÑoordinateToCheckConnection {coordinateToCheckConnection} connected.");
+                        activePipeIds.Add(coordinateToCheckConnection);
+                        pipeIdToProccess.Enqueue(coordinateToCheckConnection);
+                    }
+                }
+            }
             return ProccessPipeId();
         } else return false;
     }
 
-    private HashSet<int> GetActiveSidesForId(int idToProcess)
+    private List<int> GetActiveSidesForId(int idToProcess)
     {
         if (idToProcess == startingCoordinate)
         {
             return idToProcess switch
             {
-                0 => new HashSet<int> { 1, 2 },
-                4 => new HashSet<int> { 2, 3 },
-                _ => new HashSet<int> { 1, 2, 3 }
+                0 => new List<int> { 1, 2 },
+                4 => new List<int> { 2, 3 },
+                _ => new List<int> { 1, 2, 3 }
             };
         } else
         {
             int y = (4 - idToProcess / 5);
             int x = idToProcess - (idToProcess / 5) * 5;
-            HashSet<int> result = Pipes[idToProcess].GetComponent<PipeScript>().GetActiveAnglesForCurrectRotation();
+            List<int> result = Pipes[idToProcess].GetComponent<PipeScript>().GetActiveAnglesForCurrectRotation();
             if (y == 4)
             {
                 result.Remove(0);
@@ -135,5 +167,18 @@ public class PipesGameManager : MonoBehaviour, IRotationListener
             }
             return result;
         }
+    }
+
+    private void ClearData()
+    {
+        for (int i = 0; i < Pipes.Length; i++)
+        {
+            Destroy(Pipes[i]);
+        }
+        Array.Clear(Pipes, 0, Pipes.Length);
+        startingCoordinate = -1;
+        endingCoordinatedinate = -1;
+        pipeIdToProccess.Clear();
+        activePipeIds.Clear();
     }
 }
