@@ -11,7 +11,7 @@ public class PipesGameManager : MonoBehaviour
     public GameObject TurningPipe;
 
     private const int DEFAULT_GRID_POSITION = -1;
-    private GameObject[] Pipes;
+    private GameObject[] pipes;
     private int startingCoordinate;
     private int endingCoordinatedinate;
 
@@ -37,7 +37,7 @@ public class PipesGameManager : MonoBehaviour
     {
         int randomNumber = UnityEngine.Random.Range(0, 8);
         string currentChallenge = challenges[randomNumber];
-        Pipes = new GameObject[currentChallenge.Length];
+        pipes = new GameObject[currentChallenge.Length];
         for (int i = 0; i < currentChallenge.Length; i++)
         {
             int y = (4 - i/5);
@@ -45,27 +45,27 @@ public class PipesGameManager : MonoBehaviour
             switch (currentChallenge[i])
             {
                 case '0':
-                    Pipes[i] = Instantiate(StartingNode, new Vector2((float)x, (float)y), Quaternion.identity);
+                    pipes[i] = Instantiate(StartingNode, new Vector2((float)x, (float)y), Quaternion.identity);
                     startingCoordinate = i;
                     break;
                 case '1':
-                    Pipes[i] = Instantiate(StraightPipe, new Vector2((float)x, (float)y), Quaternion.identity);
-                    Pipes[i].GetComponent<PipeScript>().SetActiveSides(new int[] { 1, 3 }); 
+                    pipes[i] = Instantiate(StraightPipe, new Vector2((float)x, (float)y), Quaternion.identity);
+                    pipes[i].GetComponent<PipeScript>().SetActiveSides(new int[] { 1, 3 }); 
                     break;
                 case '2':
-                    Pipes[i] = Instantiate(TurningPipe, new Vector2((float)x, (float)y), Quaternion.identity);
-                    Pipes[i].GetComponent<PipeScript>().SetActiveSides(new int[] { 1, 2 });
+                    pipes[i] = Instantiate(TurningPipe, new Vector2((float)x, (float)y), Quaternion.identity);
+                    pipes[i].GetComponent<PipeScript>().SetActiveSides(new int[] { 1, 2 });
                     break;
                 case '3':
-                    Pipes[i] = Instantiate(TPipe, new Vector2((float)x, (float)y), Quaternion.identity);
-                    Pipes[i].GetComponent<PipeScript>().SetActiveSides(new int[] { 1, 2, 3 });
+                    pipes[i] = Instantiate(TPipe, new Vector2((float)x, (float)y), Quaternion.identity);
+                    pipes[i].GetComponent<PipeScript>().SetActiveSides(new int[] { 1, 2, 3 });
                     break;
                 default:
-                    Pipes[i] = Instantiate(EndingNode, new Vector2((float)x, (float)y), Quaternion.identity);
+                    pipes[i] = Instantiate(EndingNode, new Vector2((float)x, (float)y), Quaternion.identity);
                     endingCoordinatedinate = i;
                     break;
             }
-            PipeScript maybyPipeScript = Pipes[i].GetComponent<PipeScript>();
+            PipeScript maybyPipeScript = pipes[i].GetComponent<PipeScript>();
             if (maybyPipeScript != null)
             {
                 maybyPipeScript.SetRotationListener(this);
@@ -123,7 +123,7 @@ public class PipesGameManager : MonoBehaviour
                 Debug.Log($"ÑoordinateToCheckConnection {coordinateToCheckConnection}.");
                 if (!activePipeIds.Contains(coordinateToCheckConnection))
                 {
-                    if (Pipes[coordinateToCheckConnection].GetComponent<PipeScript>().IsConnectedToSide(sidesToCheck[i]))
+                    if (pipes[coordinateToCheckConnection].GetComponent<PipeScript>().IsConnectedToSide(sidesToCheck[i]))
                     {
                         Debug.Log($"ÑoordinateToCheckConnection {coordinateToCheckConnection} connected.");
                         activePipeIds.Add(coordinateToCheckConnection);
@@ -149,31 +149,19 @@ public class PipesGameManager : MonoBehaviour
         {
             int y = (4 - idToProcess / 5);
             int x = idToProcess - (idToProcess / 5) * 5;
-            List<int> result = Pipes[idToProcess].GetComponent<PipeScript>().GetActiveAnglesForCurrectRotation();
-            if (y == 4)
-            {
-                result.Remove(0);
-            }
-            if (y == 0)
-            {
-                result.Remove(2);
-            }
-            if (x == 0)
-            {
-                result.Remove(3);
-            }
-            if (x == 4)
-            {
-                result.Remove(1);
-            }
+            List<int> result = pipes[idToProcess].GetComponent<PipeScript>().GetActiveAnglesForCurrectRotation();
+            if (y == 4) result.Remove(0);
+            if (y == 0) result.Remove(2);
+            if (x == 0) result.Remove(3);
+            if (x == 4) result.Remove(1);
             return result;
         }
     }
 
     private void ClearData()
     {
-        for (int i = 0; i < Pipes.Length; i++) Destroy(Pipes[i]);
-        Array.Clear(Pipes, 0, Pipes.Length);
+        for (int i = 0; i < pipes.Length; i++) Destroy(pipes[i]);
+        Array.Clear(pipes, 0, pipes.Length);
         startingCoordinate = DEFAULT_GRID_POSITION;
         endingCoordinatedinate = DEFAULT_GRID_POSITION;
         pipeIdToProccess.Clear();
