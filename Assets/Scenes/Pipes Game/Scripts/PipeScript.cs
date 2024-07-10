@@ -1,27 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PipeScript : MonoBehaviour, IRotatable
+public class PipeScript : MonoBehaviour
 {
-    private IRotationListener gameManager;
-    private int gridPosition = -1;
-    private bool isConnectedToStartNode;
+    private const int INITIAL_GRID_POSITION = -1;
+    private PipesGameManager gameManager;
+    private int gridPosition = INITIAL_GRID_POSITION;
     private int[] activeSides;
-
-    public void SetActiveSides(int[] activeSides)
-    {
-        this.activeSides = activeSides;
-    }
-
-    void SetGameManage(PipesGameManager gameManager)
-    {
-        this.gameManager = gameManager;
-    }
-
-    void SetGridPosition(int position)
-    {
-        gridPosition = position;
-    }
 
     void Start()
     {
@@ -29,9 +14,49 @@ public class PipeScript : MonoBehaviour, IRotatable
         gameObject.transform.Rotate(0, 0, rand*90, Space.Self);
     }
 
-    void Update()
+    internal void SetActiveSides(int[] activeSides)
     {
+        this.activeSides = activeSides;
+    }
 
+    internal void SetPosition(int position)
+    {
+        gridPosition = position;
+    }
+
+    internal void SetRotationListener(PipesGameManager listener)
+    {
+        gameManager = listener;
+    }
+
+    internal List<int> GetActiveAnglesForCurrectRotation()
+    {
+        List<int> result = new List<int>();
+        int currentRotation = GetRotation();
+        Debug.Log($"Pipe currentRotation {currentRotation}.");
+        int correctedRitation = currentRotation switch
+        {
+            0 => currentRotation,
+            _ => 360 - currentRotation
+        };
+        for (int i = 0; i < activeSides.Length; i++)
+        {
+            int correctedSide = (activeSides[i] + correctedRitation / 90) % 4;
+            Debug.Log($"Pipe correctedSide {correctedSide}.");
+            result.Add(correctedSide);
+        }
+        return result;
+    }
+
+    internal bool IsConnectedToSide(int sideCode)
+    {
+        return sideCode switch
+        {
+            0 => GetActiveAnglesForCurrectRotation().Contains(2),
+            1 => GetActiveAnglesForCurrectRotation().Contains(3),
+            2 => GetActiveAnglesForCurrectRotation().Contains(0),
+            _ => GetActiveAnglesForCurrectRotation().Contains(1)
+        };
     }
 
     private void OnMouseDown()
@@ -39,38 +64,14 @@ public class PipeScript : MonoBehaviour, IRotatable
         turn();
     }
 
-    public void turn()
+    private void turn()
     {
         gameObject.transform.Rotate(0, 0, 90, Space.Self);
-        if (gameManager != null)
-        {
-            gameManager.OnRotationChanged(gridPosition);
-        }
-    }
-
-    public void SetPosition(int position)
-    {
-        gridPosition = position;
+        if (gameManager != null) gameManager.OnRotationChanged(gridPosition);
     }
 
     private int GetRotation()
     {
         return (int) gameObject.transform.eulerAngles.z/1;
-    }
-
-    public void SetRotationListener(IRotationListener listener)
-    {
-        gameManager = listener;
-    }
-
-    public HashSet<int> GetActiveAnglesForCurrectRotation()
-    {
-        HashSet<int> result = new HashSet<int>();
-        int currentRotation = GetRotation();
-        for (int i = 0; i < activeSides.Length; i++)
-        {
-            result.Add((activeSides[i] + currentRotation/90) % 4);
-        }
-        return result;
     }
 }

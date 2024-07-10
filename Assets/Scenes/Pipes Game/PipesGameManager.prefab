@@ -44,8 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7ddda679e2006446a8fe4431ff175cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StartingNode: {fileID: 3887246395404649345, guid: 1bfb8b2bdaa91504cbc4fb11043f2748, type: 3}
-  EndingNode: {fileID: 6869463764370507636, guid: 91526d8ed56797842bcc9a3ef6f9a24b, type: 3}
-  StraightPipe: {fileID: 3844779980857125487, guid: 05b27acac13a35a46afcba9db1bcea8e, type: 3}
+  StartingNode: {fileID: 3887246395404649345, guid: c6ed18c3526eda44f93831fe76ce684d, type: 3}
+  EndingNode: {fileID: 6869463764370507636, guid: 018ff2cac5f076b44b7bebc84623199a, type: 3}
+  StraightPipe: {fileID: 3844779980857125487, guid: a40f5695e4ee80640bf4cf5d7a7b4d1b, type: 3}
   TPipe: {fileID: 8427301329718989588, guid: a1d4935d0f743d4c9af2fc761acc794d, type: 3}
-  TurningPipe: {fileID: 7829462320049324046, guid: 83f87e9df732a7546b7364677db70247, type: 3}
+  TurningPipe: {fileID: 7829462320049324046, guid: c1509c003f1015b45896af23193a90c7, type: 3}
