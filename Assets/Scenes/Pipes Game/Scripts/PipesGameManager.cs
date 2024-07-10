@@ -10,6 +10,7 @@ public class PipesGameManager : MonoBehaviour
     public GameObject TPipe;
     public GameObject TurningPipe;
 
+    private const int DEFAULT_GRID_POSITION = -1;
     private GameObject[] Pipes;
     private int startingCoordinate;
     private int endingCoordinatedinate;
@@ -171,13 +172,10 @@ public class PipesGameManager : MonoBehaviour
 
     private void ClearData()
     {
-        for (int i = 0; i < Pipes.Length; i++)
-        {
-            Destroy(Pipes[i]);
-        }
+        for (int i = 0; i < Pipes.Length; i++) Destroy(Pipes[i]);
         Array.Clear(Pipes, 0, Pipes.Length);
-        startingCoordinate = -1;
-        endingCoordinatedinate = -1;
+        startingCoordinate = DEFAULT_GRID_POSITION;
+        endingCoordinatedinate = DEFAULT_GRID_POSITION;
         pipeIdToProccess.Clear();
         activePipeIds.Clear();
     }

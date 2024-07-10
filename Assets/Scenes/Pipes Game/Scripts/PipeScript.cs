@@ -1,12 +1,11 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class PipeScript : MonoBehaviour
 {
+    private const int INITIAL_GRID_POSITION = -1;
     private PipesGameManager gameManager;
-    private int gridPosition = -1;
-    private bool isConnectedToStartNode;
+    private int gridPosition = INITIAL_GRID_POSITION;
     private int[] activeSides;
 
     void Start()
@@ -18,11 +17,6 @@ public class PipeScript : MonoBehaviour
     internal void SetActiveSides(int[] activeSides)
     {
         this.activeSides = activeSides;
-    }
-
-    internal void SetGridPosition(int position)
-    {
-        gridPosition = position;
     }
 
     internal void SetPosition(int position)
@@ -73,10 +67,7 @@ public class PipeScript : MonoBehaviour
     private void turn()
     {
         gameObject.transform.Rotate(0, 0, 90, Space.Self);
-        if (gameManager != null)
-        {
-            gameManager.OnRotationChanged(gridPosition);
-        }
+        if (gameManager != null) gameManager.OnRotationChanged(gridPosition);
     }
 
     private int GetRotation()
