@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PipesGameManager : MonoBehaviour, IRotationListener
+public class PipesGameManager : MonoBehaviour
 {
     public GameObject StartingNode;
     public GameObject EndingNode;
@@ -64,11 +64,11 @@ public class PipesGameManager : MonoBehaviour, IRotationListener
                     endingCoordinatedinate = i;
                     break;
             }
-            IRotatable maybyRotatable = Pipes[i].GetComponent<IRotatable>();
-            if (maybyRotatable != null)
+            PipeScript maybyPipeScript = Pipes[i].GetComponent<PipeScript>();
+            if (maybyPipeScript != null)
             {
-                maybyRotatable.SetRotationListener(this);
-                maybyRotatable.SetPosition(i);
+                maybyPipeScript.SetRotationListener(this);
+                maybyPipeScript.SetPosition(i);
             }
         }
         if (CheckIsComplete())
@@ -78,7 +78,7 @@ public class PipesGameManager : MonoBehaviour, IRotationListener
         }
     }
 
-    void IRotationListener.OnRotationChanged(int position)
+    internal void OnRotationChanged(int position)
     {
         if (CheckIsComplete())
         {

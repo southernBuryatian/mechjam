@@ -2,27 +2,12 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class PipeScript : MonoBehaviour, IRotatable
+public class PipeScript : MonoBehaviour
 {
-    private IRotationListener gameManager;
+    private PipesGameManager gameManager;
     private int gridPosition = -1;
     private bool isConnectedToStartNode;
     private int[] activeSides;
-
-    public void SetActiveSides(int[] activeSides)
-    {
-        this.activeSides = activeSides;
-    }
-
-    void SetGameManage(PipesGameManager gameManager)
-    {
-        this.gameManager = gameManager;
-    }
-
-    void SetGridPosition(int position)
-    {
-        gridPosition = position;
-    }
 
     void Start()
     {
@@ -30,36 +15,22 @@ public class PipeScript : MonoBehaviour, IRotatable
         gameObject.transform.Rotate(0, 0, rand*90, Space.Self);
     }
 
-    void Update()
+    internal void SetActiveSides(int[] activeSides)
     {
-
+        this.activeSides = activeSides;
     }
 
-    private void OnMouseDown()
-    {
-        turn();
-    }
-
-    private void turn()
-    {
-        gameObject.transform.Rotate(0, 0, 90, Space.Self);
-        if (gameManager != null)
-        {
-            gameManager.OnRotationChanged(gridPosition);
-        }
-    }
-
-    public void SetPosition(int position)
+    internal void SetGridPosition(int position)
     {
         gridPosition = position;
     }
 
-    private int GetRotation()
+    internal void SetPosition(int position)
     {
-        return (int) gameObject.transform.eulerAngles.z/1;
+        gridPosition = position;
     }
 
-    public void SetRotationListener(IRotationListener listener)
+    internal void SetRotationListener(PipesGameManager listener)
     {
         gameManager = listener;
     }
@@ -92,5 +63,24 @@ public class PipeScript : MonoBehaviour, IRotatable
             2 => GetActiveAnglesForCurrectRotation().Contains(0),
             _ => GetActiveAnglesForCurrectRotation().Contains(1)
         };
+    }
+
+    private void OnMouseDown()
+    {
+        turn();
+    }
+
+    private void turn()
+    {
+        gameObject.transform.Rotate(0, 0, 90, Space.Self);
+        if (gameManager != null)
+        {
+            gameManager.OnRotationChanged(gridPosition);
+        }
+    }
+
+    private int GetRotation()
+    {
+        return (int) gameObject.transform.eulerAngles.z/1;
     }
 }
