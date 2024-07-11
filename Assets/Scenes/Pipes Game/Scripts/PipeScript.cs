@@ -67,6 +67,7 @@ public class PipeScript : MonoBehaviour
     private void turn()
     {
         gameObject.transform.Rotate(0, 0, 90, Space.Self);
+        gameObject.GetComponent<AudioSource>().Play();
         if (gameManager != null) gameManager.OnRotationChanged(gridPosition);
     }
 
