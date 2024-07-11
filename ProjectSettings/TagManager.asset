@@ -41,3 +41,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Background
+    uniqueID: 2007929285
+    locked: 0
+  - name: Mini-game field
+    uniqueID: 1850938769
+    locked: 0
