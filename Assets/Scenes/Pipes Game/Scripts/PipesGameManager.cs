@@ -85,6 +85,7 @@ public class PipesGameManager : MonoBehaviour
         if (CheckIsComplete())
         {
             Debug.Log($"Game is finished successfully.");
+            UnityEngine.SceneManagement.SceneManager.LoadScene("CockpitScene");
             ClearData();
         }
     }
