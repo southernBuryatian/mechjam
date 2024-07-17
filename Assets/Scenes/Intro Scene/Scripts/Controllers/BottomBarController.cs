@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class BottomBarContorller : MonoBehaviour
+public class BottomBarController : MonoBehaviour
 {
     public TextMeshProUGUI barText;
 

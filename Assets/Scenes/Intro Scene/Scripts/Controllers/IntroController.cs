@@ -6,7 +6,7 @@ using UnityEngine;
 public class IntroController : MonoBehaviour
 {
     public StoryScene currentScene;
-    public BottomBarContorller bottomBar;
+    public BottomBarController bottomBar;
     public BackgroundController backgroundController;
 
     void Start()
