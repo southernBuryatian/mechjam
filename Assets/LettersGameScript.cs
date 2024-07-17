@@ -3,7 +3,10 @@ using UnityEngine.Tilemaps;
 
 public class LettersGameScript : MonoBehaviour
 {
-    public TileBase tileA;
+    public TileBase EmptyTile;
+    public TileBase RightAnswerTile;
+    public TileBase WrongAnswerTile;
+    public TileBase RightLetterTile;
     public Vector2Int size;
 
     void Start()
@@ -14,7 +17,7 @@ public class LettersGameScript : MonoBehaviour
         for (int index = 0; index < positions.Length; index++)
         {
             positions[index] = new Vector3Int(index % size.x, index / size.y, 0);
-            tileArray[index] = tileA;
+            tileArray[index] = EmptyTile;
         }
 
         Tilemap tilemap = GetComponent<Tilemap>();
