@@ -11,6 +11,7 @@ public class PipesGameManager : MonoBehaviour
     public GameObject TurningPipe;
 
     private const int DEFAULT_GRID_POSITION = -1;
+    private const float GAP_MODIFIER = 1.5f;
     private GameObject[] pipes;
     private int startingCoordinate;
     private int endingCoordinatedinate;
@@ -40,28 +41,28 @@ public class PipesGameManager : MonoBehaviour
         pipes = new GameObject[currentChallenge.Length];
         for (int i = 0; i < currentChallenge.Length; i++)
         {
-            int y = (4 - i/5);
-            int x = i - (i/5)*5;
+            float y = (4 - i/5)* GAP_MODIFIER;
+            float x = (i - (i/5)*5)* GAP_MODIFIER;
             switch (currentChallenge[i])
             {
                 case '0':
-                    pipes[i] = Instantiate(StartingNode, new Vector2((float)x, (float)y), Quaternion.identity);
+                    pipes[i] = Instantiate(StartingNode, new Vector2(x, y), Quaternion.identity);
                     startingCoordinate = i;
                     break;
                 case '1':
-                    pipes[i] = Instantiate(StraightPipe, new Vector2((float)x, (float)y), Quaternion.identity);
+                    pipes[i] = Instantiate(StraightPipe, new Vector2(x, y), Quaternion.identity);
                     pipes[i].GetComponent<PipeScript>().SetActiveSides(new int[] { 1, 3 }); 
                     break;
                 case '2':
-                    pipes[i] = Instantiate(TurningPipe, new Vector2((float)x, (float)y), Quaternion.identity);
+                    pipes[i] = Instantiate(TurningPipe, new Vector2(x, y), Quaternion.identity);
                     pipes[i].GetComponent<PipeScript>().SetActiveSides(new int[] { 1, 2 });
                     break;
                 case '3':
-                    pipes[i] = Instantiate(TPipe, new Vector2((float)x, (float)y), Quaternion.identity);
+                    pipes[i] = Instantiate(TPipe, new Vector2(x, y), Quaternion.identity);
                     pipes[i].GetComponent<PipeScript>().SetActiveSides(new int[] { 1, 2, 3 });
                     break;
                 default:
-                    pipes[i] = Instantiate(EndingNode, new Vector2((float)x, (float)y), Quaternion.identity);
+                    pipes[i] = Instantiate(EndingNode, new Vector2(x, y), Quaternion.identity);
                     endingCoordinatedinate = i;
                     break;
             }
@@ -84,6 +85,7 @@ public class PipesGameManager : MonoBehaviour
         if (CheckIsComplete())
         {
             Debug.Log($"Game is finished successfully.");
+            UnityEngine.SceneManagement.SceneManager.LoadScene("CockpitScene");
             ClearData();
         }
     }

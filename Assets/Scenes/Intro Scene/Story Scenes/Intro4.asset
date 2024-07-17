@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f162333943648c4e84a303aa72ad4bd, type: 3}
+  m_Name: Intro4
+  m_EditorClassIdentifier: 
+  sentences:
+  - text: "\u041E\u0414\u0418\u041D \u0418\u0417 \u0422\u0410\u041A\u0418\u0425 \u041F\u0418\u041B\u041E\u0422\u041E\u0412
+      - \u0410\u0414\u041B\u0415\u0422 \u0410\u041C\u0410\u041D\u0413\u0415\u041B\u0414\u042B
+      \u0421 \u0417\u0415\u041C\u041B\u0418"
+  background: {fileID: 21300000, guid: 77464805250d86b4aa7695abfa0f2700, type: 3}
+  nextScene: {fileID: 11400000, guid: f1db99f9bf3ed1f4ea171d545b892a13, type: 2}
