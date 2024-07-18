@@ -6,7 +6,7 @@ using UnityEngine;
 public class IntroController : MonoBehaviour
 {
     public StoryScene currentScene;
-    public BottomBarContorller bottomBar;
+    public BottomBarController bottomBar;
     public BackgroundController backgroundController;
 
     void Start()
@@ -26,10 +26,11 @@ public class IntroController : MonoBehaviour
                     currentScene = currentScene.nextScene;
                     if (currentScene == null)
                     {
-                        UnityEngine.SceneManagement.SceneManager.LoadScene("PipesScene");
+                        UnityEngine.SceneManagement.SceneManager.LoadScene("CockpitScene");
+                    } else {
+                        bottomBar.PlayScene(currentScene);
+                        backgroundController.SwitchImage(currentScene.background);
                     }
-                    bottomBar.PlayScene(currentScene);
-                    backgroundController.SwitchImage(currentScene.background);
                 }
                 else
                 {
