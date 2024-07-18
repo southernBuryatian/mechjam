@@ -18,6 +18,7 @@ public class LettersGameScript : MonoBehaviour
         {
             positions[index] = new Vector3Int(index % size.x, index / size.y, 0);
             tileArray[index] = EmptyTile;
+            Debug.Log($"Tile!");
         }
 
         Tilemap tilemap = GetComponent<Tilemap>();
