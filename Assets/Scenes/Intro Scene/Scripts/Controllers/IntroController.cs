@@ -26,10 +26,11 @@ public class IntroController : MonoBehaviour
                     currentScene = currentScene.nextScene;
                     if (currentScene == null)
                     {
-                        UnityEngine.SceneManagement.SceneManager.LoadScene("PipesScene");
+                        UnityEngine.SceneManagement.SceneManager.LoadScene("CockpitScene");
+                    } else {
+                        bottomBar.PlayScene(currentScene);
+                        backgroundController.SwitchImage(currentScene.background);
                     }
-                    bottomBar.PlayScene(currentScene);
-                    backgroundController.SwitchImage(currentScene.background);
                 }
                 else
                 {
